@@ -1,0 +1,2 @@
+# airfoilplotter
+翼型を描画するAutocadスクリプトファイルを生成するプログラムです．
