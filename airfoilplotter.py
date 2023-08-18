@@ -9,7 +9,6 @@ import os
 import sys
 import numpy as np
 import openpyxl as pyxl
-from scipy import optimize as opt
 from scipy import interpolate as interp
 import math
 
@@ -85,7 +84,10 @@ main_riblocation = [maindata["Q" + str(i+4)].value for i in range(main_rib_n)] #
 del maindata
 
 """リブ位置でのコード長を計算"""
-main_c_list = [main_cr + (main_cm - main_cr) / (main_yt - 0) * y if y <= main_yt else main_cm + (main_ct - main_cm) / (main_b/2 - main_yt) * (y - main_yt) for y in main_riblocation]
+if main_yt == 0:
+    main_c_list = [main_cr + (main_ct - main_cr) / (main_b / 2 - 0) * y  for y in main_riblocation]
+else:
+    main_c_list = [main_cr + (main_cm - main_cr) / (main_yt - 0) * y if y <= main_yt else main_cm + (main_ct - main_cm) / (main_b/2 - main_yt) * (y - main_yt) for y in main_riblocation]
 
 
 
@@ -131,50 +133,29 @@ with open(bookname + "/" + main_airfoil_name + "_main_rib.scr","w") as scr:
         scr.write("\n")
         
         """スパー穴描画"""
-        if c == main_c_list[0]:
-            scr.write("circle\n")
-            scr.write(str(-spar_dim/2 - 2 - 2.5) + "," + str(main_camberc_func(c*xspar-spar_dim/2 - 2 - 2.5)+offset-main_riblocation[1]*math.tan(dihe)/2) + "\n")
-            scr.write("D\n")
-            scr.write(str(spar_dim) + "\n")
-        if c == main_c_list[1]:
-            scr.write("circle\n")
-            scr.write(str(-spar_dim/2 - 2 - 2.5) + "," + str(main_camberc_func(c*xspar-spar_dim/2 - 2 - 2.5)+offset+main_riblocation[1]*math.tan(dihe)/2) + "\n")
-            scr.write("D\n")
-            scr.write(str(spar_dim) + "\n")
+        scr.write("circle\n")
+        scr.write(str(0.0) + "," + str(main_camberc_func(c*xspar) + offset) + "\n")
+        scr.write("D\n")
+        scr.write(str(spar_dim) + "\n")
         
         
-        """tip入れ"""
+        
+        """後縁の窪み"""
         scr.write("line\n")
-        scr.write(str(-c*xcp) + "," + str(offset+0.7) + "\n")
-        scr.write(str(-c*xcp + 10) + "," + str(main_camberc_func(10)+offset+0.7) + "\n")
-        scr.write(str(-c*xcp + 10) + "," + str(main_camberc_func(10)+offset-0.7) + "\n")
-        scr.write(str(-c*xcp) + "," + str(offset-0.7) + "\n")
-        scr.write(str(-c*xcp) + "," + str(offset+0.7) + "\n")
-        scr.write("\n")
-        
-        """tipin"""
-        scr.write("line\n")
-        scr.write(str(c*(1-xcp)) + "," + str(offset+0.7) + "\n")
-        scr.write(str(c*(1-xcp) - 10) + "," + str(main_camberc_func(c-10) + offset + 0.7) + "\n")
-        scr.write(str(c*(1-xcp) - 10) + "," + str(main_camberc_func(c-10) + offset - 0.7) + "\n")
-        scr.write(str(c*(1-xcp)) + "," + str(offset-0.7) + "\n")
-        scr.write(str(c*(1-xcp)) + "," + str(offset+0.7) + "\n")
+        scr.write(str(c*(1-xspar)) + "," + str(offset+0.7) + "\n")
+        scr.write(str(c*(1-xspar) - 10) + "," + str(main_camberc_func(c-10) + offset + 0.7) + "\n")
+        scr.write(str(c*(1-xspar) - 10) + "," + str(main_camberc_func(c-10) + offset - 0.7) + "\n")
+        scr.write(str(c*(1-xspar)) + "," + str(offset-0.7) + "\n")
+        scr.write(str(c*(1-xspar)) + "," + str(offset+0.7) + "\n")
         scr.write("\n")
         
         
         
         """治具用ライン"""
         
+        """描画用オフセット"""
         offset += 30
         
-    scr.write("line\n")
-    scr.write(str(-2.5) + "," + str(-20) + "\n")
-    scr.write(str(-2.5) + "," + str(20+offset) + "\n")
-    scr.write("\n")
-    scr.write("line\n")
-    scr.write(str(2.5) + "," + str(-20) + "\n")
-    scr.write(str(2.5) + "," + str(20+offset) + "\n")
-    scr.write("\n")
     
 """wing平面形"""
 with open(bookname + "/mainwing.scr","w") as scr:
@@ -183,45 +164,45 @@ with open(bookname + "/mainwing.scr","w") as scr:
     for (c, y) in zip(main_c_list,main_riblocation):
         
         scr.write("line\n")
-        scr.write(str(y) + "," + str(c*xcp) + "\n")
-        scr.write(str(y) + "," + str(-c*(1-xcp)) + "\n")
+        scr.write(str(y) + "," + str(c*xspar) + "\n")
+        scr.write(str(y) + "," + str(-c*(1-xspar)) + "\n")
         scr.write("\n")
         scr.write("line\n")
-        scr.write(str(-y) + "," + str(c*xcp) + "\n")
-        scr.write(str(-y) + "," + str(-c*(1-xcp)) + "\n")
+        scr.write(str(-y) + "," + str(c*xspar) + "\n")
+        scr.write(str(-y) + "," + str(-c*(1-xspar)) + "\n")
         scr.write("\n")
     
     """tips"""
     scr.write("line\n")
-    scr.write(str(-main_b/2) + "," + str(main_ct*xcp) + "\n")
-    scr.write(str(-main_yt) + "," + str(main_cm*xcp) + "\n")
-    scr.write(str(0) + "," + str(main_cr*xcp) + "\n")
-    scr.write(str(main_yt) + "," + str(main_cm*xcp) + "\n")
-    scr.write(str(main_b/2) + "," + str(main_ct*xcp) + "\n")
+    scr.write(str(-main_b/2) + "," + str(main_ct*xspar) + "\n")
+    scr.write(str(-main_yt) + "," + str(main_cm*xspar) + "\n")
+    scr.write(str(0) + "," + str(main_cr*xspar) + "\n")
+    scr.write(str(main_yt) + "," + str(main_cm*xspar) + "\n")
+    scr.write(str(main_b/2) + "," + str(main_ct*xspar) + "\n")
     scr.write("\n")
     scr.write("line\n")
-    scr.write(str(-main_b/2) + "," + str(main_ct*(xcp-1)) + "\n")
-    scr.write(str(-main_yt) + "," + str(main_cm*(xcp-1)) + "\n")
-    scr.write(str(0) + "," + str(main_cr*(xcp-1)) + "\n")
-    scr.write(str(main_yt) + "," + str(main_cm*(xcp-1)) + "\n")
-    scr.write(str(main_b/2) + "," + str(main_ct*(xcp-1)) + "\n")
+    scr.write(str(-main_b/2) + "," + str(main_ct*(xspar-1)) + "\n")
+    scr.write(str(-main_yt) + "," + str(main_cm*(xspar-1)) + "\n")
+    scr.write(str(0) + "," + str(main_cr*(xspar-1)) + "\n")
+    scr.write(str(main_yt) + "," + str(main_cm*(xspar-1)) + "\n")
+    scr.write(str(main_b/2) + "," + str(main_ct*(xspar-1)) + "\n")
     scr.write("\n")
     scr.write("line\n")
-    scr.write(str(-main_b/2) + "," + str(main_ct*xcp-15) + "\n")
-    scr.write(str(-main_yt) + "," + str(main_cm*xcp-15) + "\n")
-    scr.write(str(0) + "," + str(main_cr*xcp-15) + "\n")
-    scr.write(str(main_yt) + "," + str(main_cm*xcp-15) + "\n")
-    scr.write(str(main_b/2) + "," + str(main_ct*xcp-15) + "\n")
+    scr.write(str(-main_b/2) + "," + str(main_ct*xspar-15) + "\n")
+    scr.write(str(-main_yt) + "," + str(main_cm*xspar-15) + "\n")
+    scr.write(str(0) + "," + str(main_cr*xspar-15) + "\n")
+    scr.write(str(main_yt) + "," + str(main_cm*xspar-15) + "\n")
+    scr.write(str(main_b/2) + "," + str(main_ct*xspar-15) + "\n")
     scr.write("\n")
     scr.write("line\n")
-    scr.write(str(-main_b/2) + "," + str(main_ct*(xcp-1)+15) + "\n")
-    scr.write(str(-main_yt) + "," + str(main_cm*(xcp-1)+15) + "\n")
-    scr.write(str(0) + "," + str(main_cr*(xcp-1)+15) + "\n")
-    scr.write(str(main_yt) + "," + str(main_cm*(xcp-1)+15) + "\n")
-    scr.write(str(main_b/2) + "," + str(main_ct*(xcp-1)+15) + "\n")
+    scr.write(str(-main_b/2) + "," + str(main_ct*(xspar-1)+15) + "\n")
+    scr.write(str(-main_yt) + "," + str(main_cm*(xspar-1)+15) + "\n")
+    scr.write(str(0) + "," + str(main_cr*(xspar-1)+15) + "\n")
+    scr.write(str(main_yt) + "," + str(main_cm*(xspar-1)+15) + "\n")
+    scr.write(str(main_b/2) + "," + str(main_ct*(xspar-1)+15) + "\n")
     scr.write("\n")
 
-print("input something to close")
+print("Autocad script files are saved in ./airfoilprotter")
 tem = input()
 
 
