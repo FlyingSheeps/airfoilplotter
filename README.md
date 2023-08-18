@@ -4,7 +4,7 @@ git # airfoilplotter
 # 使い方
 １．まずこのリポジトリをクローンします
 ```
-git clone <このリポジトリのhttpURL>
+git clone https://github.com/FlyingSheeps/airfoilplotter.git
 ```
 ２．クローンしたリポジトリに入ります
 ```
