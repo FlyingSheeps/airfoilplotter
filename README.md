@@ -1,4 +1,4 @@
-git # airfoilplotter
+# airfoilplotter
 翼型を描画するAutocadスクリプトファイルを生成するプログラムです．
 
 # 使い方
