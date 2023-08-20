@@ -20,3 +20,4 @@ pip install numpy
 pip install scipy
 pip install openpyxl
 ```
+５．実行結果はairfoilplotterディレクトリ内に.scrファイルとして出力されます．
