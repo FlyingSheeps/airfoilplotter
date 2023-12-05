@@ -1,7 +1,7 @@
 # airfoilplotter
 翼型を描画するAutocadスクリプトファイルを生成するプログラムです．
 
-# 使い方
+# 使い方 (airfoilplotter.py)
 １．まずこのリポジトリをクローンします
 ```
 git clone https://github.com/FlyingSheeps/airfoilplotter.git
@@ -21,3 +21,11 @@ pip install scipy
 pip install openpyxl
 ```
 ５．実行結果はairfoilplotterディレクトリ内に.scrファイルとして出力されます．
+
+# 使い方 (plot_foil_chord.py)
+１．翼型のデータをnaca0018.datと同じ形にします．
+２．以下のコマンドを実行します．
+```
+python3 plot_foil_chord.py (翼型のファイル名) (コード長[mm]) > (書き出したいファイル名.scr)
+```
+３．実行結果は(書き出したいファイル名.scr)に出力されます．
