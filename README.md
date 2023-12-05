@@ -23,7 +23,8 @@ pip install openpyxl
 ５．実行結果はairfoilplotterディレクトリ内に.scrファイルとして出力されます．
 
 # 使い方 (plot_foil_chord.py)
-１．翼型のデータをnaca0018.datと同じ形にします．  
+１．翼型のデータをnaca0018.datと同じ形にします．
+
 ２．以下のコマンドを実行します．
 ```
 python3 plot_foil_chord.py (翼型のファイル名) (コード長[mm]) > (書き出したいファイル名.scr)
