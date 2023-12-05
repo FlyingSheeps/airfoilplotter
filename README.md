@@ -25,8 +25,12 @@ pip install openpyxl
 # 使い方 (plot_foil_chord.py)
 １．翼型のデータをnaca0018.datと同じ形にします．
 
-２．以下のコマンドを実行します．
+２．以下のコマンドを実行します．()内は適宜置換してください．
 ```
-python3 plot_foil_chord.py (翼型のファイル名) (コード長[mm]) > (書き出したいファイル名.scr)
+python3 plot_foil_chord.py (翼型のファイル名) (コード長[mm]) > (書き出したいファイル名).scr
+```
+具体例
+```
+python3 plot_foil_chord.py naca0018.dat 200 > naca0018.scr
 ```
 ３．実行結果は(書き出したいファイル名.scr)に出力されます．
